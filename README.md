@@ -1,4 +1,4 @@
-# 🎬 Platforma Filme
+# 🎬 Movie Viewing Platform
 
 ![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-brightgreen?logo=springboot)
