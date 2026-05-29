@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Feedback Selectat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Feedback Clienți</h2>
+        <a th:href="@{/feedback-selectat/nou}" class="btn btn-success">Adaugă Feedback Nou</a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Film</th>
+                <th>Opțiune Feedback</th>
+                <th>Data</th>
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="f : ${feedbackuri}">
+                <td th:text="${f.idFeedback}"></td>
+                <td th:text="${f.numeClient}"></td>
+                <td th:text="${f.titluFilm}"></td>
+                <td th:text="${f.descriereOptiune}"></td>
+                <td th:text="${f.dataFeedback}"></td>
+                <td>
+                    <div class="btn-group">
+                        <a th:href="@{/feedback-selectat/{id}/editare(id=${f.idFeedback})}" class="btn btn-sm btn-warning">Edit</a>
+                        <form th:action="@{/feedback-selectat/{id}/stergere(id=${f.idFeedback})}" method="post" 
+                              onsubmit="return confirm('Sigur vrei să ștergi acest feedback?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/}" class="btn btn-secondary">Înapoi la Home</a>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formular Feedback</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2 th:text="${feedback.idFeedback == null} ? 'Adaugă Feedback' : 'Editare Feedback'"></h2>
+    <hr>
+
+    <form th:action="${feedback.idFeedback == null} ? @{/feedback-selectat/nou} : @{/feedback-selectat/{id}/editare(id=${feedback.idFeedback})}" 
+          th:object="${feedback}" method="post" class="row g-3">
+        
+        <div class="col-md-6">
+            <label class="form-label">Client</label>
+            <select th:field="*{idClient}" class="form-select" required>
+                <option value="" disabled selected>Alege clientul...</option>
+                <option th:each="c : ${clienti}" th:value="${c.idClient}" th:text="${c.nume + ' ' + c.prenume}"></option>
+            </select>
+        </div>
+        
+        <div class="col-md-6">
+            <label class="form-label">Film</label>
+            <select th:field="*{idFilm}" class="form-select" required>
+                <option value="" disabled selected>Alege filmul...</option>
+                <option th:each="f : ${filme}" th:value="${f.idFilm}" th:text="${f.titlu}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Opțiune Feedback</label>
+            <select th:field="*{idOptiune}" class="form-select" required>
+                <option value="" disabled selected>Calificativ...</option>
+                <option th:each="o : ${optiuni}" th:value="${o.idOptiune}" th:text="${o.descriere}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Data Feedback</label>
+            <input type="date" th:field="*{dataFeedback}" class="form-control" required>
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary">Salvează</button>
+            <a th:href="@{/feedback-selectat}" class="btn btn-secondary">Anulează</a>
+        </div>
+    </form>
+</body>
+</html>

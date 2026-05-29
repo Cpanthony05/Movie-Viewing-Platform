@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formular Versiune Film</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2 th:text="${versiune.idVersiune == null} ? 'Adaugă Versiune Film' : 'Editare Versiune Film'"></h2>
+    <hr>
+
+    <form th:action="${versiune.idVersiune == null} ? @{/versiuni/nou} : @{/versiuni/{id}/editare(id=${versiune.idVersiune})}" 
+          th:object="${versiune}" method="post" class="row g-3">
+        
+        <div class="col-md-12">
+            <label class="form-label">Film</label>
+            <select th:field="*{idFilm}" class="form-select" required>
+                <option value="" disabled selected>Selectează un film...</option>
+                <option th:each="f : ${filme}" 
+                        th:value="${f.idFilm}" 
+                        th:text="${f.titlu}">Film Title</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Format</label>
+            <input type="text" th:field="*{format}" class="form-control" placeholder="Ex: MP4, MKV">
+        </div>
+        
+        <div class="col-md-6">
+            <label class="form-label">Rezoluție</label>
+            <input type="text" th:field="*{rezolutie}" class="form-control" placeholder="Ex: 1080p, 4K">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Limbă</label>
+            <input type="text" th:field="*{limba}" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Subtitrare</label>
+            <input type="text" th:field="*{subtitrare}" class="form-control">
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary">Salvează</button>
+            <a th:href="@{/versiuni}" class="btn btn-secondary">Anulează</a>
+        </div>
+    </form>
+</body>
+</html>

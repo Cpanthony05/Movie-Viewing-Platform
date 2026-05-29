@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Profile - Movie Platform</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .card { border-radius: 10px; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); }
+        .section-header { border-bottom: 2px solid #f8f9fa; margin-bottom: 1.5rem; padding-bottom: 0.5rem; }
+        .table-container { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
+        .badge-sentiment { font-size: 0.8rem; }
+        .bg-gradient-primary { background: linear-gradient(45deg, #0d6efd, #0dcaf0); }
+        .bg-gradient-success { background: linear-gradient(45deg, #198754, #20c997); }
+    </style>
+</head>
+<body class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="display-5" th:text="${profil != null && !profil.empty} ? 'Profile: ' + ${profil[0].numeComplet} : 'Client Profile'">Client Profile</h1>
+            <p class="text-muted">Comprehensive viewing history, ratings, and feedback analysis.</p>
+        </div>
+        <div class="btn-group shadow-sm">
+            <a th:href="@{/statistici}" class="btn btn-outline-primary">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a th:href="@{/}" class="btn btn-outline-secondary">
+                <i class="bi bi-house-door"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form th:action="@{/statistici/profil}" method="get" class="row g-2">
+                <div class="col-8">
+                    <select name="idClient" class="form-select shadow-sm" required>
+                        <option value="" disabled selected>Select a client...</option>
+                        <option th:each="c : ${clienti}" 
+                                th:value="${c.idClient}" 
+                                th:text="${c.nume}"
+                                th:selected="${c.idClient == idClientSelectat}"></option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary w-100 shadow-sm">View Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}">Error message</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="row g-4 mb-5" th:if="${profil != null && !profil.empty}">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-gradient-primary text-white h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase small opacity-75">Total Views</h6>
+                    <h2 class="display-6 fw-bold" th:text="${profil.size()}">0</h2>
+                    <i class="bi bi-play-circle opacity-25" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 bg-gradient-success text-white h-100">
+                <div class="card-body text-center" th:with="validVotes=${profil.![votAcordat].?[#this != null]}">
+                    <h6 class="text-uppercase small opacity-75">Avg. Rating</h6>
+                    <h2 class="display-6 fw-bold" 
+                        th:text="${!validVotes.empty} ? ${#numbers.formatDecimal(#aggregates.avg(validVotes), 1, 1)} : 'N/A'">
+                        0
+                    </h2>
+                    <i class="bi bi-star-fill opacity-25" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="section-header text-secondary">
+        <i class="bi bi-clock-history"></i> Viewing History & Feedback
+    </h3>
+
+    <div class="table-container mb-5 shadow-sm">
+        <div th:if="${profil == null || profil.empty}" class="text-center py-5">
+            <i class="bi bi-inbox text-muted display-1"></i>
+            <p class="mt-3 text-muted">No activity found for this client.</p>
+        </div>
+
+        <table th:if="${profil != null && !profil.empty}" class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Movie</th>
+                    <th>Genre</th>
+                    <th>Watch Date</th>
+                    <th>Status</th>
+                    <th>Rating</th>
+                    <th>Sentiment</th>
+                    <th>Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${profil}">
+                    <td>
+                        <strong th:text="${p.filmVizionat}">Movie Title</strong>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border" th:text="${p.categorie}">Genre</span>
+                    </td>
+                    <td class="text-muted small" th:text="${p.dataVizualizare}">2023-01-01</td>
+                    <td>
+                        <span th:text="${p.stare}" 
+                              th:classappend="${p.stare == 'FINALIZAT' ? 'text-success fw-bold' : 'text-warning'}">Status</span>
+                    </td>
+                    <td>
+                        <span th:if="${p.votAcordat != null}">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <span class="fw-bold" th:text="${p.votAcordat}">8</span><span class="text-muted small">/10</span>
+                        </span>
+                        <span th:unless="${p.votAcordat != null}" class="text-muted small italic">No vote</span>
+                    </td>
+                    <td>
+                        <span th:if="${p.sentimentComentariu != null}" 
+                              class="badge rounded-pill badge-sentiment"
+                              th:classappend="${#strings.contains(p.sentimentComentariu, 'Pozitiv') ? 'bg-success' : 
+                                               (#strings.contains(p.sentimentComentariu, 'Negativ') ? 'bg-danger' : 'bg-info')}"
+                              th:text="${p.sentimentComentariu}">Sentiment</span>
+                    </td>
+                    <td>
+                        <small class="text-muted italic" th:text="${p.caracterizareSelectata}">Characterization</small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="section-header text-secondary" th:if="${profil != null && !profil.empty}">
+        <i class="bi bi-chat-quote"></i> Recent Comments
+    </h3>
+    <div class="row g-3 mb-5">
+        <th:block th:each="p : ${profil}" th:if="${p.textComentariu != null}">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm bg-light">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0" th:text="${p.filmVizionat}">Movie Title</h6>
+                            <span class="badge bg-white text-primary border shadow-sm" th:text="${p.dataVizualizare}">Date</span>
+                        </div>
+                        <p class="card-text fst-italic text-secondary" th:text="${'“' + p.textComentariu + '”'}"></p>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

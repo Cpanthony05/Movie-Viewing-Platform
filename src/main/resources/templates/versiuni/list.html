@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Versiuni Film</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Versiuni Film</h2>
+        <a th:href="@{/versiuni/nou}" class="btn btn-success">Adaugă Versiune Nouă</a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Film</th>
+                <th>Format</th>
+                <th>Rezoluție</th>
+                <th>Limbă</th>
+                <th>Subtitrare</th>
+                <th>Acțiuni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="v : ${versiuni}">
+                <td th:text="${v.idVersiune}"></td>
+                <td th:text="${v.titluFilm}"></td>
+                <td th:text="${v.format}"></td>
+                <td th:text="${v.rezolutie}"></td>
+                <td th:text="${v.limba}"></td>
+                <td th:text="${v.subtitrare}"></td>
+                <td>
+                    <div class="btn-group">
+                        <a th:href="@{/versiuni/{id}/editare(id=${v.idVersiune})}" class="btn btn-sm btn-warning">Edit</a>
+                        <form th:action="@{/versiuni/{id}/stergere(id=${v.idVersiune})}" method="post" 
+                              onsubmit="return confirm('Sigur vrei să ștergi această versiune?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/}" class="btn btn-secondary">Înapoi la Home</a>
+</body>
+</html>

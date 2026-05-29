@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formular Comentariu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+    <h2 th:text="${comentariu.idComentariu == null} ? 'Adaugă Comentariu' : 'Editare Comentariu'"></h2>
+    <hr>
+
+    <form th:action="${comentariu.idComentariu == null} ? @{/comentarii/nou} : @{/comentarii/{id}/editare(id=${comentariu.idComentariu})}" 
+          th:object="${comentariu}" method="post" class="row g-3">
+        
+        <div class="col-md-4">
+            <label class="form-label">Client</label>
+            <select th:field="*{idClient}" class="form-select" required>
+                <option value="" th:text="'-- Selectează Client --'"></option>
+                <option th:each="cl : ${clienti}" th:value="${cl.idClient}" 
+                        th:text="${cl.nume} + ' ' + ${cl.prenume}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Film (ori filmul, ori actorul)</label>
+            <select th:field="*{idFilm}" class="form-select">
+                <option value="" th:text="'-- Fără Film --'"></option>
+                <option th:each="f : ${filme}" th:value="${f.idFilm}" th:text="${f.titlu}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Actor (ori filmul, ori actorul)</label>
+            <select th:field="*{idActor}" class="form-select">
+                <option value="" th:text="'-- Fără Actor --'"></option>
+                <option th:each="a : ${actori}" th:value="${a.idActor}" 
+                        th:text="${a.prenume} + ' ' + ${a.numeFamilie}"></option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Data Comentariu</label>
+            <input type="date" th:field="*{dataComentariu}" class="form-control" required>
+        </div>
+
+        <div class="col-12">
+            <label class="form-label">Mesaj</label>
+            <textarea th:field="*{textComentariu}" class="form-control" rows="4" placeholder="Scrie aici comentariul..." required></textarea>
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary">Salvează</button>
+            <a th:href="@{/comentarii}" class="btn btn-secondary">Anulează</a>
+        </div>
+    </form>
+</body>
+</html>
