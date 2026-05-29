@@ -446,21 +446,6 @@ The Oracle database must be reachable at the configured JDBC URL, either as a se
 
 ---
 
-## 🔮 Future Improvements
-
-- **Spring Security integration** — role-based access control separating admin and read-only users
-- **Pagination** — list pages currently load all rows; add Spring MVC pagination for large datasets
-- **Search & filtering** — movie search by title, category, or date range using query parameters
-- **REST API layer** — expose JSON endpoints alongside the Thymeleaf views for SPA or mobile clients
-- **Flyway / Liquibase** — replace manual SQL script execution with a proper database migration tool
-- **Docker Compose** — bundle the application and an Oracle XE container for one-command local startup
-- **Input validation** — add `spring-boot-starter-validation` (Bean Validation) with error feedback on forms
-- **Internationalisation** — extract Romanian/English UI strings into `.properties` message bundles
-- **Unit and integration tests** — expand test coverage with `@WebMvcTest` slice tests and an embedded/test Oracle schema
-- **Audit logging** — track who created or modified records with `created_at` / `updated_at` columns
-
----
-
 ## 📄 License
 
 This project is released under the [MIT License](https://opensource.org/licenses/MIT).
